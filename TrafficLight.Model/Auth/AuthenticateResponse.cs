@@ -8,18 +8,18 @@ namespace TrafficLights.Model.Auth
 {
     public class AuthenticateResponse
     {
-        public string Id { get; set; }
+      /*  public string Id { get; set; }
         public string Name { get; set; }
         public string LastName { get; set; }
-        public string Username { get; set; }
-        public string JwtToken { get; set; }
+        public string Username { get; set; }*/
+        public string AccessToken { get; set; }
         public string RefreshToken { get; set; }
 
-        public AuthenticateResponse(UserIdentityEntity user, string jwtToken, string refreshToken)
+        public AuthenticateResponse(/*UserIdentityEntity user,*/ string jwtToken, string refreshToken)
         {
-            Id = user.Id;
-            Name = user.UserName;            
-            JwtToken = jwtToken;
+           // Id = user.Id;
+           // Name = user.UserName;            
+            AccessToken = jwtToken;
             RefreshToken = refreshToken;
         }
     }

@@ -17,21 +17,25 @@ using TrafficLights.Model.Helpers;
 namespace TrafficLights.Api.Controllers
 {
     [Authorize]
-    [ApiController]
-    [Route("[controller]")]
+    [ApiController]/*
+    [Route("[controller]")]*/
+    [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
+        //IPasswordHasher<UserIdentityEntity>, PasswordHasher<UserIdentityEntity>
         private readonly IUserService _userService;
 
         private readonly UserManager<UserIdentityEntity> _userManager;
         private readonly SignInManager<UserIdentityEntity> _signInManager;
+        private readonly IPasswordHasher<RegisterRequest> _passwordHasher;
 
         public UsersController(IUserService userService, UserManager<UserIdentityEntity> userManager,
-            SignInManager<UserIdentityEntity> signInManager)
+            SignInManager<UserIdentityEntity> signInManager, IPasswordHasher<RegisterRequest> passwordHasher)
         {
             _userService = userService;
             _userManager = userManager;
             _signInManager = signInManager;
+            _passwordHasher = passwordHasher;
         }
 
 
@@ -64,12 +68,20 @@ namespace TrafficLights.Api.Controllers
         {
             if (ModelState.IsValid)
             {
-                UserIdentityEntity user = new UserIdentityEntity { Email = model.Email, UserName = model.Email };
+                var passwordHash = _passwordHasher.HashPassword(model, model.Password);
+
+                UserIdentityEntity user = new UserIdentityEntity()
+                {
+                    FirstName =  model.FirstName,
+                    LastName = model.LastName,
+                    UserName =  model.UserName,
+                    PasswordHash = passwordHash
+                };
                 // добавляем пользователя
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    /*// установка куки
+                    /*// cookie setting
                     await _signInManager.SignInAsync(user, false);
                     return RedirectToAction("Index", "Home");*/
                     return Ok("Registered successfully");

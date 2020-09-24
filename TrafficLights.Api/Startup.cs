@@ -18,6 +18,7 @@ using TrafficLights.Core.Hubs;
 using TrafficLights.Data;
 using TrafficLights.Data.DataAccess;
 using TrafficLights.Model;
+using TrafficLights.Model.Auth;
 using TrafficLights.Model.Entities;
 using TrafficLights.Model.Helpers;
 using TrafficLights.WorkerService;
@@ -44,6 +45,7 @@ namespace TrafficLights.Api
             services.AddScoped<TrafficLightRepository>();
             services.AddScoped<AuthRepository>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IPasswordHasher<RegisterRequest>, PasswordHasher<RegisterRequest>>();
 
             var identityBuilder = services.AddIdentity<UserIdentityEntity, IdentityRole>();
             identityBuilder.AddEntityFrameworkStores<TraficLightsContext>();

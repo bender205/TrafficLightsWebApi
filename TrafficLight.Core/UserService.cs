@@ -58,7 +58,7 @@ namespace TrafficLights.Core
             _repository.Update(user);
             await _repository.SaveChangesAsync(CancellationToken.None);
 
-            return new AuthenticateResponse(user, jwtToken, refreshToken.Token);
+            return new AuthenticateResponse(/*user,*/ jwtToken, refreshToken.Token);
         }
 
       
@@ -88,7 +88,7 @@ namespace TrafficLights.Core
             // generate new jwt
             var jwtToken = generateJwtToken(user);
 
-            return new AuthenticateResponse(user, jwtToken, newRefreshToken.Token);
+            return new AuthenticateResponse(/*user,*/ jwtToken, newRefreshToken.Token);
         }
 
         public async Task<bool> RevokeTokenAsync(string token, string ipAddress)
