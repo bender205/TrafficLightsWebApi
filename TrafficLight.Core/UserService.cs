@@ -50,8 +50,8 @@ namespace TrafficLights.Core
         //    if (user == null) return null;
 
             // authentication successful so generate jwt and refresh tokens
-            var jwtToken = generateJwtToken(user);
-            var refreshToken = generateRefreshToken(ipAddress);
+            var jwtToken = GenerateJwtToken(user);
+            var refreshToken = GenerateRefreshToken(ipAddress);
 
             // save refresh token
             user.RefreshTokens.Add(refreshToken);
@@ -77,7 +77,7 @@ namespace TrafficLights.Core
             if (!refreshToken.IsActive) return null;
 
             // replace old refresh token with a new one and save
-            var newRefreshToken = generateRefreshToken(ipAddress);
+            var newRefreshToken = GenerateRefreshToken(ipAddress);
             refreshToken.Revoked = DateTime.UtcNow;
             refreshToken.RevokedByIp = ipAddress;
             refreshToken.ReplacedByToken = newRefreshToken.Token;
@@ -86,7 +86,7 @@ namespace TrafficLights.Core
             await _repository.SaveChangesAsync(CancellationToken.None);
 
             // generate new jwt
-            var jwtToken = generateJwtToken(user);
+            var jwtToken = GenerateJwtToken(user);
 
             return new AuthenticateResponse(/*user,*/ jwtToken, newRefreshToken.Token);
         }
@@ -124,7 +124,7 @@ namespace TrafficLights.Core
 
         // helper methods
 
-        private string generateJwtToken(UserIdentityEntity user)
+        private string GenerateJwtToken(UserIdentityEntity user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
@@ -141,7 +141,7 @@ namespace TrafficLights.Core
             return tokenHandler.WriteToken(token);
         }
 
-        private RefreshToken generateRefreshToken(string ipAddress)
+        private RefreshToken GenerateRefreshToken(string ipAddress)
         {
             using (var rngCryptoServiceProvider = new RNGCryptoServiceProvider())
             {

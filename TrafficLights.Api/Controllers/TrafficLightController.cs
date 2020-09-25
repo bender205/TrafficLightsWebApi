@@ -25,7 +25,7 @@ namespace TrafficLights.Api.Controllers
         private readonly TrafficLightsService _trafficLightsService;
         private readonly TrafficLightRepository _repository;
 
-        public TrafficLightController(IServiceProvider serviceProvider, TrafficLight trafficLight, TrafficLightsService trafficLightsService)
+        public TrafficLightController(IServiceProvider serviceProvider, TrafficLightsService trafficLightsService)
         {
             Services = serviceProvider.CreateScope().ServiceProvider;
             _repository = Services.GetRequiredService<TrafficLightRepository>();

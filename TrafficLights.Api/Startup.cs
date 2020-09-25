@@ -39,8 +39,8 @@ namespace TrafficLights.Api
         {
             services.AddSignalR();
             services.AddDbContext<TraficLightsContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")),
-            ServiceLifetime.Transient);
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")),
+                ServiceLifetime.Transient);
             services.AddScoped<TrafficLight>();
             services.AddScoped<TrafficLightRepository>();
             services.AddScoped<AuthRepository>();
@@ -66,7 +66,7 @@ namespace TrafficLights.Api
             
             services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.IgnoreNullValues = true);
 
-            services.AddMvc();
+            //services.AddMvc();
 
             services.AddHostedService<Worker>();
 

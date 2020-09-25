@@ -18,7 +18,7 @@ namespace TrafficLights.WorkerService
 {
     public class TrafficLightsService
     {
-        object lockObject = new object();
+        object  lockObject = new object();
         public List<TrafficLight> _activeTrafficLights = new List<TrafficLight>();
 
         public void AddTrafficLight(TrafficLight trafficLight)
@@ -43,7 +43,7 @@ namespace TrafficLights.WorkerService
 
         private readonly IHubContext<TraficLightsHub> _hubContext;
 
-        private IServiceProvider _serviceProvider;
+        private readonly IServiceProvider  _serviceProvider;
         private readonly TrafficLightsService _trafficLightsService;
         #endregion
         #region Constructors

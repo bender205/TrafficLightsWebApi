@@ -29,7 +29,7 @@ namespace TrafficLights.Data
         }
         public async Task<UserIdentityEntity> GetByTokenAsync(string token, CancellationToken cancellationToken)
         {
-            return await _databaseContext.Users.SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == token));
+            return await _databaseContext.Users.SingleOrDefaultAsync(u => u.RefreshTokens.Any(t => t.Token == token), cancellationToken);
         }
         public async Task SaveChangesAsync(CancellationToken cancellationToken)
         {
