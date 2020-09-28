@@ -1,5 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Reflection;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.Json.Serialization;
 using MediatR;
@@ -75,28 +78,95 @@ namespace TrafficLights.Api
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
 
-            // configure jwt authentication
-            var appSettings = appSettingsSection.Get<AppSettings>();
-            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+
+
+            // Configure JWT asymetric encryption
+
+            /* var appSettings = appSettingsSection.Get<AppSettings>();
+             var key = Encoding.ASCII.GetBytes(appSettings.Secret);*/
+            X509Certificate2 cert = new X509Certificate2(@"C:\Users\Developer\certs\mycert.pfx");
+            SecurityKey signingKey = new X509SecurityKey(cert);
+
             services.AddAuthentication(x =>
-                {
-                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
                 .AddJwtBearer(x =>
-                {
+                {                    
                     x.RequireHttpsMetadata = false;
                     x.SaveToken = true;
                     x.TokenValidationParameters = new TokenValidationParameters
                     {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(key),
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
-                        // set clockskew to zero so tokens expire exactly at token expiration time (instead of 5 minutes later)
-                        ClockSkew = TimeSpan.Zero
+                        
+                        ValidateIssuer = true,
+                        ValidIssuer = "MyIssuer",
+                        ValidateAudience = true,
+                        ValidAudience = "MyAudience",
+                        ValidateLifetime = true,
+                        IssuerSigningKey = signingKey,
                     };
                 });
+
+            
+
+            /*
+                        // Configure JWT asymetric encryption
+                        RSA publicRsa = RSA.Create();
+                        publicRsa.FromXmlFile(Path.Combine(Directory.GetCurrentDirectory(),
+                            "Keys",
+                             this.Configuration.GetValue<String>("Tokens:PublicKey")
+                             ));
+                        RsaSecurityKey signingKey = new RsaSecurityKey(publicRsa);
+
+                        services.AddAuthentication(options =>
+                        {
+                            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                        }).AddJwtBearer(config =>
+                        {
+                            config.RequireHttpsMetadata = false;
+                            config.SaveToken = true;
+                            config.TokenValidationParameters = new TokenValidationParameters()
+                            {
+                                IssuerSigningKey = signingKey,
+                                ValidateAudience = true,
+                                ValidAudience = this.Configuration["Tokens:Audience"],
+                                ValidateIssuer = true,
+                                ValidIssuer = this.Configuration["Tokens:Issuer"],
+                                ValidateLifetime = true,
+                                ValidateIssuerSigningKey = true
+                            };
+                        });
+            */
+
+            //JWT auth symmetric encryption
+            /*
+                        // configure jwt authentication
+                        var appSettings = appSettingsSection.Get<AppSettings>();
+                        var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+                        services.AddAuthentication(x =>
+                            {
+                                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                            })
+                            .AddJwtBearer(x =>
+                            {
+                                x.RequireHttpsMetadata = false;
+                                x.SaveToken = true;
+                                x.TokenValidationParameters = new TokenValidationParameters
+                                {
+                                    ValidateIssuerSigningKey = true,
+                                  //  IssuerSigningKey = new SymmetricSecurityKey(key),
+                                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                                    ValidateIssuer = false,
+                                    ValidateAudience = false,
+                                    // set clockskew to zero so tokens expire exactly at token expiration time (instead of 5 minutes later)
+                                    ClockSkew = TimeSpan.Zero
+                                };
+                            });*/
+
+
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings.
@@ -148,6 +218,10 @@ namespace TrafficLights.Api
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+
+            
+
 
             app.UseEndpoints(endpoints =>
             {

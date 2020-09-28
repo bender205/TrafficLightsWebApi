@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -24,7 +25,6 @@ namespace TrafficLights.Api.Controllers
     {
         //IPasswordHasher<UserIdentityEntity>, PasswordHasher<UserIdentityEntity>
         private readonly IUserService _userService;
-
         private readonly UserManager<UserIdentityEntity> _userManager;
         private readonly SignInManager<UserIdentityEntity> _signInManager;
         private readonly IPasswordHasher<RegisterRequest> _passwordHasher;
@@ -36,6 +36,7 @@ namespace TrafficLights.Api.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _passwordHasher = passwordHasher;
+            
         }
 
 

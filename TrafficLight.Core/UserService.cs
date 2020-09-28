@@ -155,8 +155,6 @@ namespace TrafficLights.Core
                     CreatedByIp = ipAddress
                 };
             }
-        }
-
-       
+        }       
     }
 }
