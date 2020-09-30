@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TrafficLights.Data.DataAccess;
 using TrafficLights.Model;
@@ -47,6 +48,20 @@ namespace TrafficLights.Data
         public async Task<UserIdentityEntity> GetByIdAsync(int id)
         {          
               return await _databaseContext.Users.FindAsync(id);
+        }
+        public async Task<IEnumerable<IdentityRole>> /*Task<IEnumerable<IdentityRoleClaim<string>>>*/ GetRolesAsync(UserIdentityEntity user)
+        {
+            var roleIds = await _databaseContext.UserRoles.Where(s => s.UserId == user.Id).Select(s => s.RoleId).ToListAsync();
+            return await _databaseContext.Roles.Where(s => roleIds.Contains(s.Id)).ToListAsync();
+           // return await _databaseContext.UserClaims.Where(x => x.Id == userId).ToListAsync();
+            //return await _databaseContext.RoleClaims.FindAsync(user);
+        }
+        // TO DO edit method return type
+        public async Task<IdentityRoleClaim<string>>  GetClaimByRoleIdAsync(int roleId)
+        {           
+             return await _databaseContext.RoleClaims.FirstOrDefaultAsync(x => x.RoleId == roleId.ToString());
+             //return await _databaseContext.RoleClaims.FirstOrDefaultAsync(x => x.Id == roleId);
+            //return await _databaseContext.RoleClaims.FindAsync(user);
         }
     }
 }

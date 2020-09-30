@@ -198,8 +198,21 @@ namespace TrafficLights.Api
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
                 options.SlidingExpiration = true;
             });
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("OnlyForAdmin", policy =>
+                {
+                    // policy.RequireClaim("Role", "admin");
+                    policy.RequireRole("admin", "Admin");
+                });
+                options.AddPolicy("OnlyForUser", policy =>
+                {
+                    policy.RequireRole("user", "User");
+                    // policy.RequireClaim("Role", "user");
+                });
+            });
             // configure DI for application services
-        //    services.AddScoped<IUserService, UserService>();
+            //    services.AddScoped<IUserService, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

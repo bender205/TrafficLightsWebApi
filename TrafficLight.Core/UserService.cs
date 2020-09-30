@@ -4,9 +4,11 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -50,7 +52,7 @@ namespace TrafficLights.Core
         //    if (user == null) return null;
 
             // authentication successful so generate jwt and refresh tokens
-            var jwtToken = GenerateJwtToken(user);
+            var jwtToken = await GenerateJwtTokenAsync(user);
             var refreshToken = GenerateRefreshToken(ipAddress);
 
             // save refresh token
@@ -86,7 +88,7 @@ namespace TrafficLights.Core
             await _repository.SaveChangesAsync(CancellationToken.None);
 
             // generate new jwt
-            var jwtToken = GenerateJwtToken(user);
+            var jwtToken = await GenerateJwtTokenAsync(user);
 
             return new AuthenticateResponse(/*user,*/ jwtToken, newRefreshToken.Token);
         }
@@ -123,20 +125,38 @@ namespace TrafficLights.Core
         }
 
         // helper methods
-
-        private string GenerateJwtToken(UserIdentityEntity user)
+        
+        private async Task<string> GenerateJwtTokenAsync(UserIdentityEntity user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            // Getting all users claims
+            var userRoles = await _repository.GetRolesAsync(user);
+            // var claims =  await _repository.GetClaimsAsync(user);
+            List<Claim> userClaims = new List<Claim>();
+            foreach (var r in userRoles)
+            {
+                int userRoleId = int.Parse(r.Id);
+                var claim = await _repository.GetClaimByRoleIdAsync(userRoleId);
+                userClaims.Add(new Claim(claim.ClaimType.ToString(), claim.ClaimValue.ToString()));
+            }
+            /* X509Certificate2 cert = new X509Certificate2(@"C:\Users\Developer\certs\mycert.pfx");
+             SecurityKey signingKey = new X509SecurityKey(cert);*/
+
+            userClaims.Add(new Claim(ClaimTypes.Name, user.Id.ToString()));
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
-                }),
-                Expires = DateTime.UtcNow.AddMinutes(15),
+                Subject = new ClaimsIdentity(userClaims),                
+                Expires = DateTime.UtcNow.AddDays(2),                               
+                //   SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.RsaSha256)
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
+          //  tokenDescriptor.Subject.AddClaims(claims as List<Claims>);
+           /* foreach (var c in claims)
+            {
+                tokenDescriptor.Subject.AddClaim(new Claim(c.ClaimType.ToString(), c.ClaimValue.ToString()));           
+            }*/
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }
@@ -155,6 +175,8 @@ namespace TrafficLights.Core
                     CreatedByIp = ipAddress
                 };
             }
-        }       
+        }
+
+       
     }
 }
