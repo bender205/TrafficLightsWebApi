@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using TrafficLights.Data;
@@ -36,33 +34,33 @@ namespace TrafficLights.Api.Controllers
         [HttpGet("{id}")]
         public async Task<ITrafficLight> Get(int id)
         {
-            var traficLightById = await _repository.GetByIdAsync(id, CancellationToken.None);
+            var trafficLightById = await _repository.GetByIdAsync(id, CancellationToken.None);
 
-            if (traficLightById == null)
+            if (trafficLightById == null)
             {
-                traficLightById = new TrafficLightEntity()
+                trafficLightById = new TrafficLightEntity()
                 {
                     Color = Colors.Red,
                     Date = DateTime.Now
                 };
 
                 //TODO replace code below with Interface Realization 
-                await _repository.AddTrafficLightAsync(traficLightById, CancellationToken.None);
-                var trafficLightForService = new TrafficLight() { Id = traficLightById.Id, Color = traficLightById.Color, Date = traficLightById.Date, IsSwitchingDown = default };
+                await _repository.AddTrafficLightAsync(trafficLightById, CancellationToken.None);
+                var trafficLightForService = new TrafficLight() { Id = trafficLightById.Id, Color = trafficLightById.Color, Date = trafficLightById.Date, IsSwitchingDown = default };
                 _trafficLightsService.AddTrafficLight(trafficLightForService);
 
                 return trafficLightForService;
             }
-            var activeTafficLigthFromService = _trafficLightsService._activeTrafficLights.FirstOrDefault(t => t.Id == id);
-            if (activeTafficLigthFromService != null)
+            var activeTrafficLightFromService = _trafficLightsService._activeTrafficLights.FirstOrDefault(t => t.Id == id);
+            if (activeTrafficLightFromService != null)
             {
-                return activeTafficLigthFromService;
+                return activeTrafficLightFromService;
             }
             else
             {
-                var trafficLigthForService = new TrafficLight() { Id = traficLightById.Id, Color = traficLightById.Color, Date = traficLightById.Date, IsSwitchingDown = default };
-                _trafficLightsService.AddTrafficLight(trafficLigthForService);
-                return traficLightById;
+                var trafficLightForService = new TrafficLight() { Id = trafficLightById.Id, Color = trafficLightById.Color, Date = trafficLightById.Date, IsSwitchingDown = default };
+                _trafficLightsService.AddTrafficLight(trafficLightForService);
+                return trafficLightById;
             }
         }
 
