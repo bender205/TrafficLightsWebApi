@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -35,13 +36,17 @@ namespace TrafficLights.Core
         private readonly AppSettings _appSettings;
         IServiceProvider Services { get; }
         private readonly AuthRepository _repository;
-
-        public UserService(IServiceProvider serviceProvider, IOptions<AppSettings> appSettings)
+        private IConfiguration _configuration { get; }
+        public UserService(IServiceProvider serviceProvider, IOptions<AppSettings> appSettings, IConfiguration configuration)
         {
+            _configuration = configuration;
             Services = serviceProvider.CreateScope().ServiceProvider;
             _repository = Services.GetRequiredService<AuthRepository>();
             _appSettings = appSettings.Value;
         }
+
+
+        
 
 
 
@@ -140,12 +145,16 @@ namespace TrafficLights.Core
           
             userClaims.Add(new Claim(ClaimTypes.Name, user.Id.ToString()));
 
+            var tokenAudienceSection = _configuration.GetSection("TokenOptions:Audience");
+            var tokenIssuerSection = _configuration.GetSection("TokenOptions:Issuer");
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(userClaims),
                 Expires = DateTime.UtcNow.AddDays(2),
-                
-                SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.RsaSha512Signature)
+                Issuer = tokenIssuerSection.Value,
+                Audience = tokenAudienceSection.Value,
+                    SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.RsaSha512Signature)
             };
            
             var token = tokenHandler.CreateToken(tokenDescriptor);

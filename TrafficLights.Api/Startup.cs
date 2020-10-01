@@ -79,6 +79,10 @@ namespace TrafficLights.Api
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
 
+            var tokenAudienceSection = Configuration.GetSection("TokenOptions:Audience");
+
+            var tokenIssuerSection = Configuration.GetSection("TokenOptions:Issuer");
+
             var certificate = new X509Certificate2(@"C:\Users\Developer\certs\mycert.pfx");
             var securityKey = new X509SecurityKey(certificate);
             
@@ -95,10 +99,10 @@ namespace TrafficLights.Api
                     x.TokenValidationParameters = new TokenValidationParameters
                     {
 
-                        ValidateIssuer = false,
-                        ValidIssuer = "MyIssuer",
-                        ValidateAudience = false,
-                        ValidAudience = "MyAudience",
+                        ValidateIssuer = true,
+                        ValidIssuer = tokenIssuerSection.Value,
+                        ValidateAudience = true,
+                        ValidAudience = tokenAudienceSection.Value,
                         ValidateLifetime = true,
                         IssuerSigningKey = securityKey
                     };
