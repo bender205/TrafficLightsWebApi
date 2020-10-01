@@ -47,10 +47,6 @@ namespace TrafficLights.Core
 
         public async Task<AuthenticateResponse> GetAuthenticateResponceTokensAsync(UserIdentityEntity user, string ipAddress)
         {
-            // var user = await _repository.GetByCredentialsAsync(userEntity.UserName, userEntity.PasswordHash, CancellationToken.None);
-
-            //    if (user == null) return null;
-
             // authentication successful so generate jwt and refresh tokens
             var jwtToken = await GenerateJwtTokenAsync(user);
             var refreshToken = GenerateRefreshToken(ipAddress);
@@ -125,11 +121,9 @@ namespace TrafficLights.Core
         }
 
         // helper methods
-
         private async Task<string> GenerateJwtTokenAsync(UserIdentityEntity user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            //var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
             // Getting all users claims
             var userRoles = await _repository.GetRolesAsync(user);
             // var claims =  await _repository.GetClaimsAsync(user);
@@ -143,42 +137,17 @@ namespace TrafficLights.Core
 
             var certificate = new X509Certificate2(@"C:\Users\Developer\certs\mycert.pfx");
             var securityKey = new X509SecurityKey(certificate);
-            //var securityKey = new RsaSecurityKey(certificate.GetRSAPrivateKey());
-
-            //SigningCredentials signingCredentials = new X509SigningCredentials(cert, SecurityAlgorithms.RsaSha256);
-            //   SigningCredentials signingCredentials = new X509SigningCredentials(cert, "RS256");
-            // SecurityKey signingKey = new X509SecurityKey(cert);
-
+          
             userClaims.Add(new Claim(ClaimTypes.Name, user.Id.ToString()));
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(userClaims),
                 Expires = DateTime.UtcNow.AddDays(2),
-                //todo add correctly working SecurityAlgorithms 
                 
                 SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.RsaSha512Signature)
-                //    SigningCredentials = new X509SigningCredentials(new X509Certificate2(@"C:\Users\Developer\certs\mycert.pfx")),
-
-
-                //work
-                //   SigningCredentials = signingCredentials
-                //work 
-                // SigningCredentials = new X509SigningCredentials(cert) 
-
-                //generates wrong token
-                // EncryptingCredentials = new X509EncryptingCredentials(cert)
-
-                // SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.RsaSha512)
-                //SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.RsaSha512)
-                // SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256Signature)
-                //SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
-            //  tokenDescriptor.Subject.AddClaims(claims as List<Claims>);
-            /* foreach (var c in claims)
-             {
-                 tokenDescriptor.Subject.AddClaim(new Claim(c.ClaimType.ToString(), c.ClaimValue.ToString()));           
-             }*/
+           
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
         }

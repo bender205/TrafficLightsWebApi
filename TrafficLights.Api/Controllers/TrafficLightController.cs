@@ -32,15 +32,6 @@ namespace TrafficLights.Api.Controllers
             this._trafficLightsService = trafficLightsService;
         }
 
-        // GET: api/<TrafficLight>
-        /*  [HttpGet]
-          public ITrafficLight Get()
-          {
-              var data =
-               new TrafficLightEntity() { Id = 1, Color = Colors.Yellow, Date = DateTime.UtcNow };
-              return data;
-          }*/
-
         // GET api/<TrafficLight>/5
         [HttpGet("{id}")]
         public async Task<ITrafficLight> Get(int id)
