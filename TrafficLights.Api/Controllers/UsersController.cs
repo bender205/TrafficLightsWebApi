@@ -1,19 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
 using TrafficLights.Core;
-using TrafficLights.Data;
 using TrafficLights.Model.Auth;
 using TrafficLights.Model.Entities;
-using TrafficLights.Model.Helpers;
 
 namespace TrafficLights.Api.Controllers
 {
@@ -36,7 +28,7 @@ namespace TrafficLights.Api.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
             _passwordHasher = passwordHasher;
-            
+
         }
 
 
@@ -46,7 +38,7 @@ namespace TrafficLights.Api.Controllers
         public async Task<IActionResult> Login([FromBody] AuthenticateRequest model)
         {
             var user = await _userManager.FindByNameAsync(model.UserName);
-            if(user == null) return BadRequest(new { message = "Username or password is incorrect" });
+            if (user == null) return BadRequest(new { message = "Username or password is incorrect" });
             var result = await _signInManager.PasswordSignInAsync(user, model.Password, true, false);
             if (result.Succeeded)
             {
@@ -73,9 +65,9 @@ namespace TrafficLights.Api.Controllers
 
                 UserIdentityEntity user = new UserIdentityEntity()
                 {
-                    FirstName =  model.FirstName,
+                    FirstName = model.FirstName,
                     LastName = model.LastName,
-                    UserName =  model.UserName,
+                    UserName = model.UserName,
                     PasswordHash = passwordHash
                 };
                 // добавляем пользователя

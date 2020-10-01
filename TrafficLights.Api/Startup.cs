@@ -1,11 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Text.Json.Serialization;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -15,7 +8,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using TrafficLights.Api.Controllers;
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Reflection;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using TrafficLights.Core;
 using TrafficLights.Core.Hubs;
 using TrafficLights.Data;
@@ -52,9 +49,13 @@ namespace TrafficLights.Api
 
             var identityBuilder = services.AddIdentity<UserIdentityEntity, IdentityRole>();
             identityBuilder.AddEntityFrameworkStores<TraficLightsContext>();
+            
+
+
 
             services.AddMediatR(Assembly.GetExecutingAssembly(), Assembly.Load(("TrafficLights.Core")));
             services.AddSingleton<TrafficLightsService>();
+
             services.AddCors(options =>
             {
                 options.AddPolicy(name: MyAllowSpecificOrigins,
@@ -66,7 +67,7 @@ namespace TrafficLights.Api
                                         .AllowCredentials();
                                   });
             });
-            
+
             services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.IgnoreNullValues = true);
 
             //services.AddMvc();
@@ -78,40 +79,109 @@ namespace TrafficLights.Api
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
 
-
-
             // Configure JWT asymetric encryption
 
             /* var appSettings = appSettingsSection.Get<AppSettings>();
              var key = Encoding.ASCII.GetBytes(appSettings.Secret);*/
-            X509Certificate2 cert = new X509Certificate2(@"C:\Users\Developer\certs\mycert.pfx");
-            SecurityKey signingKey = new X509SecurityKey(cert);
+            /*X509Certificate2 cert = new X509Certificate2(@"C:\Users\Developer\certs\mycert.pfx");
+            SecurityKey signingKey = new X509SecurityKey(cert);*/
+            #region addauthtry
+            //services.AddAuthentication(x =>
+            //{
+            //    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            //    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            //})
+            //    .AddJwtBearer(x =>
+            //    {
+            //        x.RequireHttpsMetadata = false;
+            //        x.SaveToken = true;
+            //        x.TokenValidationParameters = new TokenValidationParameters
+            //        {
 
+            //            ValidateIssuer = true,
+            //            ValidIssuer = "MyIssuer",
+            //            ValidateAudience = true,
+            //            ValidAudience = "MyAudience",
+            //            ValidateLifetime = true,
+            //            IssuerSigningKey = signingKey,
+            //        };
+            //    });
+
+
+
+            //services.AddAuthentication(
+            //        CertificateAuthenticationDefaults.AuthenticationScheme)
+            //    .AddCertificate(options =>
+            //    {
+            //        options.Events = new CertificateAuthenticationEvents
+            //        {
+            //            OnCertificateValidated = context =>
+            //            {
+            //                var claims = new[]
+            //                {
+            //                    new Claim(
+            //                        ClaimTypes.NameIdentifier,
+            //                        context.ClientCertificate.Subject,
+            //                        ClaimValueTypes.String,
+            //                        context.Options.ClaimsIssuer),
+            //                    new Claim(ClaimTypes.Name,
+            //                        context.ClientCertificate.Subject,
+            //                        ClaimValueTypes.String,
+            //                        context.Options.ClaimsIssuer)
+            //                };
+
+            //                context.Principal = new ClaimsPrincipal(
+            //                    new ClaimsIdentity(claims, context.Scheme.Name));
+            //                context.Success();
+
+            //                return Task.CompletedTask;
+            //            }
+            //        };
+            //    });
+            #endregion
+
+            //!!!!!!!!!!!!!!!!!!!!!!!!
+
+            /*var issuerSigningCertificate =
+                new X509SecurityKey(new X509Certificate2(@"C:\Users\Developer\certs\mycert.pfx"));
+            RsaSecurityKey issuerSigningKey = issuerSigningCertificate as RsaSecurityKey;
+*/
+
+            var certificate = new X509Certificate2(@"C:\Users\Developer\certs\mycert.pfx");
+            var securityKey = new X509SecurityKey(certificate);
+            //var securityKey = new RsaSecurityKey(certificate.GetRSAPrivateKey());
+
+            //work well
             services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
+                {
+                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
                 .AddJwtBearer(x =>
-                {                    
+                {
+                    
                     x.RequireHttpsMetadata = false;
                     x.SaveToken = true;
                     x.TokenValidationParameters = new TokenValidationParameters
                     {
-                        
-                        ValidateIssuer = true,
+
+                        ValidateIssuer = false,
                         ValidIssuer = "MyIssuer",
-                        ValidateAudience = true,
+                        ValidateAudience = false,
                         ValidAudience = "MyAudience",
                         ValidateLifetime = true,
-                        IssuerSigningKey = signingKey,
+                        IssuerSigningKey = securityKey
+
+                        //  IssuerSigningKey = new RsaSecurityKey(new X509Certificate2(@"C:\Users\Developer\certs\mycert.pfx")),
+                        //  IssuerSigningKey = new RsaSecurityKey(signingKey, SecurityAlgorithms.HmacSha256Signature),
+                        //  IssuerSigningKey = new X509SecurityKey(new X509Certificate2(@"C:\Users\Developer\certs\mycert.pfx")),
                     };
                 });
 
-            
+
 
             /*
-                        // Configure JWT asymetric encryption
+                        // Configure JWT asymmetric encryption
                         RSA publicRsa = RSA.Create();
                         publicRsa.FromXmlFile(Path.Combine(Directory.GetCurrentDirectory(),
                             "Keys",
@@ -176,6 +246,7 @@ namespace TrafficLights.Api
                 options.Password.RequireUppercase = true;
                 options.Password.RequiredLength = 6;
                 options.Password.RequiredUniqueChars = 1;
+                
 
                 // Lockout settings.
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
@@ -188,7 +259,7 @@ namespace TrafficLights.Api
                 options.User.RequireUniqueEmail = false;
             });
 
-            services.ConfigureApplicationCookie(options =>
+           /* services.ConfigureApplicationCookie(options =>
             {
                 // Cookie settings
                 options.Cookie.HttpOnly = true;
@@ -197,7 +268,7 @@ namespace TrafficLights.Api
                 options.LoginPath = "/Identity/Account/Login";
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
                 options.SlidingExpiration = true;
-            });
+            });*/
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("OnlyForAdmin", policy =>
@@ -208,7 +279,7 @@ namespace TrafficLights.Api
                 options.AddPolicy("OnlyForUser", policy =>
                 {
                     policy.RequireRole("user", "User");
-                    // policy.RequireClaim("Role", "user");
+                     /*policy.RequireClaim("role", "user");*/
                 });
             });
             // configure DI for application services
@@ -218,7 +289,7 @@ namespace TrafficLights.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-   
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -233,7 +304,7 @@ namespace TrafficLights.Api
             app.UseAuthorization();
 
 
-            
+
 
 
             app.UseEndpoints(endpoints =>
