@@ -22,8 +22,9 @@ namespace TrafficLights.Api.Controllers
         IServiceProvider Services { get; }
         private readonly TrafficLightsService _trafficLightsService;
         private readonly TrafficLightRepository _repository;
+        private readonly Worker _trafficWorker;
 
-        public TrafficLightController(IServiceProvider serviceProvider, TrafficLightsService trafficLightsService)
+        public TrafficLightController(IServiceProvider serviceProvider, TrafficLightsService trafficLightsService, Worker trafficWorker)
         {
             Services = serviceProvider.CreateScope().ServiceProvider;
             _repository = Services.GetRequiredService<TrafficLightRepository>();
@@ -46,7 +47,13 @@ namespace TrafficLights.Api.Controllers
 
                 //TODO replace code below with Interface Realization 
                 await _repository.AddTrafficLightAsync(trafficLightById, CancellationToken.None);
-                var trafficLightForService = new TrafficLight() { Id = trafficLightById.Id, Color = trafficLightById.Color, Date = trafficLightById.Date, IsSwitchingDown = default };
+                var trafficLightForService = new TrafficLight()
+                {
+                    Id = trafficLightById.Id,
+                    Color = trafficLightById.Color,
+                    Date = trafficLightById.Date,
+                    IsSwitchingDown = default
+                };
                 _trafficLightsService.AddTrafficLight(trafficLightForService);
 
                 return trafficLightForService;
@@ -63,19 +70,31 @@ namespace TrafficLights.Api.Controllers
                 return trafficLightById;
             }
         }
+        
+        // PUT api/<TrafficLight>/5
+        /* [AllowAnonymous]*/
+        //   [Authorize(Roles = "admin", Policy = "OnlyForAdmin")]
+        [HttpPut("nextcolor")]
+        //public async Task NextColor(/*[FromQuery(Name = "id")] */dynamic trafficLightByIdRequest)
+       // public async Task NextColor([FromQuery(Name = "id")] TrafficLightByIdRequest trafficLightByIdRequest)
+        public async Task NextColor([FromQuery] TrafficLightByIdRequest trafficLightByIdRequest)
+        {
+           
+            int id = trafficLightByIdRequest.Id;
+            var containsTrafficLight = await this._trafficLightsService.ContainTrafficLightByIdAsync(id);
+            // Todo we can remove containsTrafficLight and ContainTrafficLightByIdAsync call and add trafficLight null check
+            if (containsTrafficLight)
+            {
+                var trafficLight = await this._trafficLightsService.GetTrafficLightByIdAsync(id);
+                await this._trafficWorker.SwitchNextColor(trafficLight);
+            }
+        }
 
         // POST api/<TrafficLight>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Put([FromBody] string value)
         {
         }
-
-        // PUT api/<TrafficLight>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
         // DELETE api/<TrafficLight>/5
         [HttpDelete("{id}")]
         public void Delete(int id)

@@ -72,8 +72,9 @@ namespace TrafficLights.Api
 
             //services.AddMvc();
 
-            services.AddHostedService<Worker>();
-
+            // services.AddHostedService<Worker>();
+            services.AddSingleton<Worker>();
+            services.AddHostedService<Worker>(provider => provider.GetService<Worker>());
 
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
