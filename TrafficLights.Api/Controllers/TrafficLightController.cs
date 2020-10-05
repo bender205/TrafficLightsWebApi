@@ -14,9 +14,8 @@ using TrafficLights.WorkerService;
 namespace TrafficLights.Api.Controllers
 {
 
-    [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Route("api/[controller]")]
     public class TrafficLightController : ControllerBase
     {
         IServiceProvider Services { get; }
@@ -29,9 +28,11 @@ namespace TrafficLights.Api.Controllers
             Services = serviceProvider.CreateScope().ServiceProvider;
             _repository = Services.GetRequiredService<TrafficLightRepository>();
             this._trafficLightsService = trafficLightsService;
+            this._trafficWorker = trafficWorker;
         }
 
         // GET api/<TrafficLight>/5
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ITrafficLight> Get(int id)
         {
@@ -45,7 +46,7 @@ namespace TrafficLights.Api.Controllers
                     Date = DateTime.Now
                 };
 
-                //TODO replace code below with Interface Realization 
+                //TODO replace code below with Interface realization 
                 await _repository.AddTrafficLightAsync(trafficLightById, CancellationToken.None);
                 var trafficLightForService = new TrafficLight()
                 {
@@ -72,14 +73,10 @@ namespace TrafficLights.Api.Controllers
         }
         
         // PUT api/<TrafficLight>/5
-        /* [AllowAnonymous]*/
-        //   [Authorize(Roles = "admin", Policy = "OnlyForAdmin")]
+        [Authorize(Roles = "admin", Policy = "OnlyForAdmin")]
         [HttpPut("nextcolor")]
-        //public async Task NextColor(/*[FromQuery(Name = "id")] */dynamic trafficLightByIdRequest)
-       // public async Task NextColor([FromQuery(Name = "id")] TrafficLightByIdRequest trafficLightByIdRequest)
         public async Task NextColor([FromQuery] TrafficLightByIdRequest trafficLightByIdRequest)
         {
-           
             int id = trafficLightByIdRequest.Id;
             var containsTrafficLight = await this._trafficLightsService.ContainTrafficLightByIdAsync(id);
             // Todo we can remove containsTrafficLight and ContainTrafficLightByIdAsync call and add trafficLight null check

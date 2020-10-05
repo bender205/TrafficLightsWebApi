@@ -36,13 +36,10 @@ namespace TrafficLights.WorkerService
         }
         public async Task<TrafficLight> GetTrafficLightByIdAsync(int id)
         {
-            return await Task.Run(
-                () =>
-            {
-                // Todo is it a good practice to return null
-                return this._activeTrafficLights.Where(t => t.Id == id) .FirstOrDefault();
-            });
             
+                // Todo is it a good practice to return null
+                return this._activeTrafficLights .FirstOrDefault(t => t.Id == id);
+
         }
 
         public async Task<bool> ContainTrafficLightByIdAsync(int id)
