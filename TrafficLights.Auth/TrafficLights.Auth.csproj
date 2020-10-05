@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>92cb54d6-495f-471e-9b3d-bee27baf40fc</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TrafficLight.Core\TrafficLights.Core.csproj" />
+    <ProjectReference Include="..\TrafficLight.Model\TrafficLights.Model.csproj" />
+  </ItemGroup>
+
+
+</Project>
