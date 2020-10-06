@@ -1,14 +1,18 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using TrafficLights.Core;
 using TrafficLights.Model.Auth;
 using TrafficLights.Model.Entities;
 
-namespace TrafficLights.Api.Controllers
+namespace TrafficLights.Auth.Controllers
 {
+ 
     [Authorize]
     [ApiController]/*
     [Route("[controller]")]*/

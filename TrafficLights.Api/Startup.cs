@@ -25,7 +25,6 @@ using TrafficLights.WorkerService;
 
 namespace TrafficLights.Api
 {
-
     public class Startup
     {
         readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";

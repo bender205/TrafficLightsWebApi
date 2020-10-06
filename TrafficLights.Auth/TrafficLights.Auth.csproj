@@ -5,7 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TrafficLight.Core\TrafficLights.Core.csproj" />
+    <ProjectReference Include="..\TrafficLight.Data\TrafficLights.Data.csproj" />
+    <ProjectReference Include="..\TrafficLight.Model\TrafficLights.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="NewFolder\" />
   </ItemGroup>
 
 
