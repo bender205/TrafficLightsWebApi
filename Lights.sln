@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficLights.Model", "TrafficLight.Model\TrafficLights.Model.csproj", "{3553F67F-EB2D-4603-B2CC-B4566744EA9D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficLights.Model", "TrafficLight.Model\TrafficLights.Model.csproj", "{3553F67F-EB2D-4603-B2CC-B4566744EA9D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficLights.Data", "TrafficLight.Data\TrafficLights.Data.csproj", "{5D04A847-1BCE-48C7-B4AD-152EDF18D4BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficLights.Data", "TrafficLight.Data\TrafficLights.Data.csproj", "{5D04A847-1BCE-48C7-B4AD-152EDF18D4BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficLights.Core", "TrafficLight.Core\TrafficLights.Core.csproj", "{E73F3EC4-F813-422D-B8C8-C2BE1399D0F1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficLights.Core", "TrafficLight.Core\TrafficLights.Core.csproj", "{E73F3EC4-F813-422D-B8C8-C2BE1399D0F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficLights.WorkerService", "TrafficLights.WorkerService\TrafficLights.WorkerService.csproj", "{1A05FC7A-3121-4A56-9054-898C240834B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficLights.WorkerService", "TrafficLights.WorkerService\TrafficLights.WorkerService.csproj", "{1A05FC7A-3121-4A56-9054-898C240834B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficLights.Api", "TrafficLights.Api\TrafficLights.Api.csproj", "{AF1C0B8A-BF3D-4699-9B7E-82245C33B3C0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficLights.Api", "TrafficLights.Api\TrafficLights.Api.csproj", "{AF1C0B8A-BF3D-4699-9B7E-82245C33B3C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficLights.Auth", "TrafficLights.Auth\TrafficLights.Auth.csproj", "{4D0BFF43-A462-46F6-91FF-5E4339412BCF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{AF1C0B8A-BF3D-4699-9B7E-82245C33B3C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF1C0B8A-BF3D-4699-9B7E-82245C33B3C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF1C0B8A-BF3D-4699-9B7E-82245C33B3C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D0BFF43-A462-46F6-91FF-5E4339412BCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D0BFF43-A462-46F6-91FF-5E4339412BCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D0BFF43-A462-46F6-91FF-5E4339412BCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D0BFF43-A462-46F6-91FF-5E4339412BCF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

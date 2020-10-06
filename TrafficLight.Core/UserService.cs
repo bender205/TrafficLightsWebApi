@@ -45,11 +45,6 @@ namespace TrafficLights.Core
             _appSettings = appSettings.Value;
         }
 
-
-        
-
-
-
         public async Task<AuthenticateResponse> GetAuthenticateResponceTokensAsync(UserIdentityEntity user, string ipAddress)
         {
             // authentication successful so generate jwt and refresh tokens
@@ -63,9 +58,6 @@ namespace TrafficLights.Core
 
             return new AuthenticateResponse(/*user,*/ jwtToken, refreshToken.Token);
         }
-
-
-
 
         public async Task<AuthenticateResponse> RefreshTokenAsync(string token, string ipAddress)
         {
