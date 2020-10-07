@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  trafficlights.api:
+    image: ${DOCKER_REGISTRY-}trafficlightsapi
+    build:
+      context: .
+      dockerfile: TrafficLights.Api/Dockerfile
+
+  trafficlights.auth:
+    image: ${DOCKER_REGISTRY-}trafficlightsauth
+    build:
+      context: .
+      dockerfile: TrafficLights.Auth/Dockerfile
+

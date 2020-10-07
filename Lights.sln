@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficLights.WorkerService
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficLights.Api", "TrafficLights.Api\TrafficLights.Api.csproj", "{AF1C0B8A-BF3D-4699-9B7E-82245C33B3C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficLights.Auth", "TrafficLights.Auth\TrafficLights.Auth.csproj", "{4D0BFF43-A462-46F6-91FF-5E4339412BCF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficLights.Auth", "TrafficLights.Auth\TrafficLights.Auth.csproj", "{4D0BFF43-A462-46F6-91FF-5E4339412BCF}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{8E6CB405-B4DC-42C5-989A-8C1C24ACB905}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{4D0BFF43-A462-46F6-91FF-5E4339412BCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4D0BFF43-A462-46F6-91FF-5E4339412BCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4D0BFF43-A462-46F6-91FF-5E4339412BCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E6CB405-B4DC-42C5-989A-8C1C24ACB905}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E6CB405-B4DC-42C5-989A-8C1C24ACB905}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E6CB405-B4DC-42C5-989A-8C1C24ACB905}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E6CB405-B4DC-42C5-989A-8C1C24ACB905}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
