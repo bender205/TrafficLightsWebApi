@@ -72,7 +72,7 @@ namespace TrafficLights.Auth
 
             var tokenIssuerSection = Configuration.GetSection("TokenOptions:Issuer");
 
-            var certificate = new X509Certificate2(@"../TrafficLights.Auth\Certificates\mycert.pfx");
+            var certificate = new X509Certificate2(@"/secrets/certificate.pfx");
             var securityKey = new X509SecurityKey(certificate);
 
             services.AddAuthentication(x =>

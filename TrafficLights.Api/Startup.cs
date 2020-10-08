@@ -83,7 +83,7 @@ namespace TrafficLights.Api
 
             var tokenIssuerSection = Configuration.GetSection("TokenOptions:Issuer");
 
-            var certificate = new X509Certificate2(@"../TrafficLights.Auth\Certificates\public.pem");
+            var certificate = new X509Certificate2(@"/secrets/certificate-public.cer");
             var securityKey = new X509SecurityKey(certificate);
             
             services.AddAuthentication(x =>
@@ -98,7 +98,6 @@ namespace TrafficLights.Api
                     x.SaveToken = true;
                     x.TokenValidationParameters = new TokenValidationParameters
                     {
-
                         ValidateIssuer = true,
                         ValidIssuer = tokenIssuerSection.Value,
                         ValidateAudience = true,

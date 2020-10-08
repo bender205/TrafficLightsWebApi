@@ -16,5 +16,7 @@ namespace TrafficLights.Api
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+
+     //   CreateWebHostBuilder(args).Build().MigrateDatabase<MagContext>().Run();
     }
 }

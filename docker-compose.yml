@@ -6,10 +6,31 @@ services:
     build:
       context: .
       dockerfile: TrafficLights.Api/Dockerfile
+    links:
+      - "efcoredockermysql:database"
 
   trafficlights.auth:
     image: ${DOCKER_REGISTRY-}trafficlightsauth
-    build:
-      context: .
+    build:     
+      context: .     
       dockerfile: TrafficLights.Auth/Dockerfile
+    links:
+      - "efcoredockermysql:database"
 
+
+  efcoredockermysql:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    restart: always
+    container_name: traffic-light-database
+    ports:
+      - "5432:1433"
+    environment:
+      SA_PASSWORD: enterprise-mail
+      ACCEPT_EULA: Y
+    volumes:
+      - mssqlsystem:/var/opt/mssql
+      - mssqluser:/var/opt/sqlserver
+
+volumes:
+    mssqlsystem:
+    mssqluser:

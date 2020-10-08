@@ -132,7 +132,7 @@ namespace TrafficLights.Core
                 userClaims.Add(new Claim(claim.ClaimType.ToString(), claim.ClaimValue.ToString()));
             }
 
-            var certificate = new X509Certificate2(@"../TrafficLights.Auth\Certificates\mycert.pfx");
+            var certificate = new X509Certificate2(@"/secrets/certificate.pfx");
             var securityKey = new X509SecurityKey(certificate);
           
             userClaims.Add(new Claim(ClaimTypes.Name, user.Id.ToString()));
