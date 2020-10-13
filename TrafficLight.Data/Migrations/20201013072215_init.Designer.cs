@@ -10,7 +10,7 @@ using TrafficLights.Data.DataAccess;
 namespace TrafficLights.Data.Migrations
 {
     [DbContext(typeof(TraficLightsContext))]
-    [Migration("20201012130133_init")]
+    [Migration("20201013072215_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -45,6 +45,22 @@ namespace TrafficLights.Data.Migrations
                         .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "1",
+                            ConcurrencyStamp = "540318b7-2c6d-45fc-b509-26aaaa4593a8",
+                            Name = "user",
+                            NormalizedName = "USER"
+                        },
+                        new
+                        {
+                            Id = "2",
+                            ConcurrencyStamp = "4dabe407-786b-40b5-b985-ea9889764792",
+                            Name = "admin",
+                            NormalizedName = "ADMIN"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -150,12 +166,12 @@ namespace TrafficLights.Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "46632e13-c099-4a0f-b418-60b0d0fbe776",
+                            UserId = "46632e13-c099-4a0f-b418-60b0d0fbe775",
                             RoleId = "1"
                         },
                         new
                         {
-                            UserId = "46632e13-c099-4a0f-b418-60b0d0fbe775",
+                            UserId = "46632e13-c099-4a0f-b418-60b0d0fbe776",
                             RoleId = "2"
                         });
                 });
@@ -272,14 +288,15 @@ namespace TrafficLights.Data.Migrations
                         {
                             Id = "46632e13-c099-4a0f-b418-60b0d0fbe775",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "cb56b67c-b263-4779-b603-b5667f5af020",
+                            ConcurrencyStamp = "68f19f87-bea9-497b-963a-29c4585f3060",
                             EmailConfirmed = false,
                             FirstName = "Petro",
                             LastName = "Ze",
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAEAACcQAAAAEInMC2Dlsd910t78ierXlme07D0fPnLsqrgY58LBSM88dWB+m72/oOVp5slITiPUCw==",
+                            NormalizedUserName = "USER",
+                            PasswordHash = "AQAAAAEAACcQAAAAEA+cyALgAa+d5jetMPINajnk09gboFkCmDlErB7/VXKjh6YbYPfMItW4ODsoYKjDGw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "479f46ea-d291-4dfc-ac45-8892ba1eb424",
+                            SecurityStamp = "a5dfde99-725d-47a9-a419-0c8f8d1e0425",
                             TwoFactorEnabled = false,
                             UserName = "user"
                         },
@@ -287,16 +304,17 @@ namespace TrafficLights.Data.Migrations
                         {
                             Id = "46632e13-c099-4a0f-b418-60b0d0fbe776",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2024e481-559a-409e-810f-d293ba8a7ab8",
+                            ConcurrencyStamp = "0fa025c9-4cde-4003-9519-db7307a8ac34",
                             EmailConfirmed = false,
                             FirstName = "Gordon",
                             LastName = "Freeman",
                             LockoutEnabled = false,
-                            PasswordHash = "AQAAAAEAACcQAAAAEJQKW30q8UWYbsi5pi9n7WfwIEEIGBcY3ymrWAqEty3522WboNyRcNLoJVDYwpq2ow==",
+                            NormalizedUserName = "ADMIN",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOE06NogL/zXQwavut5htsuY7CqnGcBPPYUwuvh7loqk4XX03Q/XEHVSg+mZZP6qqg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "0bee8acb-302f-4a2f-82eb-1eb72f9ad661",
+                            SecurityStamp = "d32186f8-600b-4475-b472-c1213a7661fa",
                             TwoFactorEnabled = false,
-                            UserName = "user"
+                            UserName = "admin"
                         });
                 });
 

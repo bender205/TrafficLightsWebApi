@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using TrafficLights.Core;
 using TrafficLights.Model.Auth;
@@ -39,8 +41,10 @@ namespace TrafficLights.Auth.Controllers
         [AllowAnonymous]
         //[HttpPost("authenticate")]
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] AuthenticateRequest model)
+        public async Task<IActionResult> Login([FromBody] AuthenticateRequest model, [FromServices] IUserStore<UserIdentityEntity> store)
         {
+            //var b = new UserStore<UserIdentityEntity>();
+           // var a = store.FindByNameAsync(model.UserName.ToUpper(), CancellationToken.None);
             var user = await _userManager.FindByNameAsync(model.UserName);
             if (user == null) return BadRequest(new { message = "Username or password is incorrect" });
             var result = await _signInManager.PasswordSignInAsync(user, model.Password, true, false);

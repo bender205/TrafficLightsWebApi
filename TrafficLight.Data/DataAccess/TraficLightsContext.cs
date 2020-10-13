@@ -30,14 +30,17 @@ namespace TrafficLights.Data.DataAccess
                     Id = "46632e13-c099-4a0f-b418-60b0d0fbe775",
                     UserName = "user",
                     FirstName = "Petro",
-                    LastName = "Ze"
+                    LastName = "Ze",
+                    NormalizedUserName = "user".ToUpper()
+
                 },
                 new UserIdentityEntity
                 {
                     Id = "46632e13-c099-4a0f-b418-60b0d0fbe776",
                     UserName = "admin",
                     FirstName = "Gordon",
-                    LastName = "Freeman"
+                    LastName = "Freeman",
+                    NormalizedUserName = "admin".ToUpper()
                 },
             };
 

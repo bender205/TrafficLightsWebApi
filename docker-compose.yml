@@ -24,7 +24,7 @@ services:
     container_name: traffic-light-database
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_DB: trafficlightpostgresdb
+      POSTGRES_DB: traffic-light
       POSTGRES_PASSWORD: postgres
     volumes:
       - /var/lib/postgres
