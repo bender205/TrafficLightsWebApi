@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: TrafficLights.Api/Dockerfile
     links:
-      - "efcoredockermysql:database"
+      - "trafficlightpostgresdb"
 
   trafficlights.auth:
     image: ${DOCKER_REGISTRY-}trafficlightsauth
@@ -15,22 +15,18 @@ services:
       context: .     
       dockerfile: TrafficLights.Auth/Dockerfile
     links:
-      - "efcoredockermysql:database"
+      - "trafficlightpostgresdb"
 
 
-  efcoredockermysql:
-    image: mcr.microsoft.com/mssql/server:2017-latest
+  trafficlightpostgresdb:
+    image: postgres
     restart: always
     container_name: traffic-light-database
-    ports:
-      - "5432:1433"
     environment:
-      SA_PASSWORD: enterprise-mail
-      ACCEPT_EULA: Y
+      POSTGRES_USER: postgres
+      POSTGRES_DB: trafficlightpostgresdb
+      POSTGRES_PASSWORD: postgres
     volumes:
-      - mssqlsystem:/var/opt/mssql
-      - mssqluser:/var/opt/sqlserver
+      - /var/lib/postgres
 
-volumes:
-    mssqlsystem:
-    mssqluser:
+

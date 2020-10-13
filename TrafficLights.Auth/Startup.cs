@@ -36,7 +36,7 @@ namespace TrafficLights.Auth
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<TraficLightsContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")),
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")),
                 ServiceLifetime.Transient);
 
             services.AddScoped<AuthRepository>();
@@ -71,8 +71,8 @@ namespace TrafficLights.Auth
             var tokenAudienceSection = Configuration.GetSection("TokenOptions:Audience");
 
             var tokenIssuerSection = Configuration.GetSection("TokenOptions:Issuer");
-
-            var certificate = new X509Certificate2(@"/secrets/certificate.pfx");
+            var certificatePath = Configuration.GetSection("SertificatePath:Certificate").Value;
+            var certificate = new X509Certificate2(certificatePath);
             var securityKey = new X509SecurityKey(certificate);
 
             services.AddAuthentication(x =>

@@ -1,9 +1,10 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace TrafficLights.Data.Migrations
 {
-    public partial class newIdentitywhithJWT : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -39,7 +40,9 @@ namespace TrafficLights.Data.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    FirstName = table.Column<string>(nullable: true),
+                    LastName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -51,7 +54,7 @@ namespace TrafficLights.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Color = table.Column<int>(maxLength: 10, nullable: false),
                     Date = table.Column<DateTime>(nullable: true)
                 },
@@ -65,7 +68,7 @@ namespace TrafficLights.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     RoleId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -86,7 +89,7 @@ namespace TrafficLights.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     UserId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
                     ClaimValue = table.Column<string>(nullable: true)
@@ -171,7 +174,7 @@ namespace TrafficLights.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Token = table.Column<string>(nullable: true),
                     Expires = table.Column<DateTime>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false),
@@ -192,6 +195,33 @@ namespace TrafficLights.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "AspNetRoleClaims",
+                columns: new[] { "Id", "ClaimType", "ClaimValue", "RoleId" },
+                values: new object[,]
+                {
+                    { 1, "http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "user", "1" },
+                    { 2, "http://schemas.microsoft.com/ws/2008/06/identity/claims/role", "admin", "2" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[,]
+                {
+                    { "46632e13-c099-4a0f-b418-60b0d0fbe775", 0, "cb56b67c-b263-4779-b603-b5667f5af020", null, false, "Petro", "Ze", false, null, null, null, "AQAAAAEAACcQAAAAEInMC2Dlsd910t78ierXlme07D0fPnLsqrgY58LBSM88dWB+m72/oOVp5slITiPUCw==", null, false, "479f46ea-d291-4dfc-ac45-8892ba1eb424", false, "user" },
+                    { "46632e13-c099-4a0f-b418-60b0d0fbe776", 0, "2024e481-559a-409e-810f-d293ba8a7ab8", null, false, "Gordon", "Freeman", false, null, null, null, "AQAAAAEAACcQAAAAEJQKW30q8UWYbsi5pi9n7WfwIEEIGBcY3ymrWAqEty3522WboNyRcNLoJVDYwpq2ow==", null, false, "0bee8acb-302f-4a2f-82eb-1eb72f9ad661", false, "user" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "UserId", "RoleId" },
+                values: new object[,]
+                {
+                    { "46632e13-c099-4a0f-b418-60b0d0fbe775", "2" },
+                    { "46632e13-c099-4a0f-b418-60b0d0fbe776", "1" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -201,8 +231,7 @@ namespace TrafficLights.Data.Migrations
                 name: "RoleNameIndex",
                 table: "AspNetRoles",
                 column: "NormalizedName",
-                unique: true,
-                filter: "[NormalizedName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
@@ -228,8 +257,7 @@ namespace TrafficLights.Data.Migrations
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
-                unique: true,
-                filter: "[NormalizedUserName] IS NOT NULL");
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_RefreshToken_UserIdentityEntityId",

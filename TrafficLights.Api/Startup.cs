@@ -1,17 +1,16 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Reflection;
-using System.Security.Cryptography;
+using System.Linq;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using TrafficLights.Core;
 using TrafficLights.Core.Hubs;
@@ -38,21 +37,22 @@ namespace TrafficLights.Api
         {
             services.AddSignalR();
             services.AddDbContext<TraficLightsContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")),
+                    options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")),
                 ServiceLifetime.Transient);
             services.AddScoped<TrafficLight>();
             services.AddScoped<TrafficLightRepository>();
             services.AddScoped<AuthRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPasswordHasher<RegisterRequest>, PasswordHasher<RegisterRequest>>();
+            services.AddScoped<IPasswordHasher<UserIdentityEntity>, PasswordHasher<UserIdentityEntity>>();
 
             var identityBuilder = services.AddIdentity<UserIdentityEntity, IdentityRole>();
             identityBuilder.AddEntityFrameworkStores<TraficLightsContext>();
-            
 
 
 
-            services.AddMediatR(Assembly.GetExecutingAssembly(), Assembly.Load(("TrafficLights.Core")));
+
+            //services.AddMediatR(Assembly.GetExecutingAssembly(), Assembly.Load(("TrafficLights.Core")));
             services.AddSingleton<TrafficLightsService>();
 
             services.AddCors(options =>
@@ -75,17 +75,22 @@ namespace TrafficLights.Api
             services.AddSingleton<Worker>();
             services.AddHostedService<Worker>(provider => provider.GetService<Worker>());
 
-            // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
 
             var tokenAudienceSection = Configuration.GetSection("TokenOptions:Audience");
-
             var tokenIssuerSection = Configuration.GetSection("TokenOptions:Issuer");
 
-            var certificate = new X509Certificate2(@"/secrets/certificate-public.cer");
+            var certificatePath = RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                ? "/secrets/certificate-public.cer" : "../TrafficLights.Auth/Certificates/secret.crt";
+
+
+
+            //TODO use it in code  var publicKeyPath = Configuration.GetSection("SertificatePath:PublicKey").Value;
+
+            var certificate = new X509Certificate2(certificatePath);
             var securityKey = new X509SecurityKey(certificate);
-            
+
             services.AddAuthentication(x =>
                 {
                     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -93,7 +98,7 @@ namespace TrafficLights.Api
                 })
                 .AddJwtBearer(x =>
                 {
-                    
+
                     x.RequireHttpsMetadata = false;
                     x.SaveToken = true;
                     x.TokenValidationParameters = new TokenValidationParameters
@@ -110,22 +115,22 @@ namespace TrafficLights.Api
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings.
-                options.Password.RequireDigit = true;
+                /*options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequireNonAlphanumeric = true;
-                options.Password.RequireUppercase = true;
-                options.Password.RequiredLength = 6;
-                options.Password.RequiredUniqueChars = 1;
-                
+                options.Password.RequireUppercase = true;*/
+                options.Password.RequiredLength = 5;
+                /*options.Password.RequiredUniqueChars = 1;*/
 
-                // Lockout settings.
+
+                /*// Lockout settings.
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
                 options.Lockout.MaxFailedAccessAttempts = 5;
-                options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.AllowedForNewUsers = true;*/
 
                 // User settings.
-                options.User.AllowedUserNameCharacters =
-                    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+                /* options.User.AllowedUserNameCharacters =
+                     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";*/
                 options.User.RequireUniqueEmail = false;
             });
 
@@ -139,20 +144,45 @@ namespace TrafficLights.Api
                 options.AddPolicy("OnlyForUser", policy =>
                 {
                     policy.RequireRole("user", "User");
-                     /*policy.RequireClaim("role", "user");*/
+                    /*policy.RequireClaim("role", "user");*/
                 });
             });
-            
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                using var services = app.ApplicationServices.CreateScope();
+                using var databaseContext = services.ServiceProvider.GetRequiredService<TraficLightsContext>();
+
+                databaseContext.Database.EnsureCreated();
+
+                //if (!databaseContext.Database.EnsureCreated())
+                //{
+                //    var databaseMigrator = databaseContext.Database.GetService<IMigrator>();
+                //    var pendingMigrations = databaseContext.Database.GetPendingMigrations().ToArray();
+                //    if (pendingMigrations.Any())
+                //    {
+                //        foreach (var pendingMigration in pendingMigrations)
+                //            databaseMigrator.Migrate(pendingMigration);
+                //    }
+                //}
             }
+
+
+            /*   using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+               {
+                   scope.ServiceProvider.GetService<TraficLightsContext>().Database.Migrate();
+               }*/
+            /*using (var scope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
+            {
+                scope.ServiceProvider.GetService<TraficLightsContext>().Database.Migrate();
+            }*/
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -161,10 +191,6 @@ namespace TrafficLights.Api
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-
-
-
 
             app.UseEndpoints(endpoints =>
             {

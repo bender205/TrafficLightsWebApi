@@ -23,3 +23,10 @@ services:
     volumes:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - ./TrafficLights.Auth/Certificates:/secrets
+
+  trafficlightpostgresdb:
+    ports:
+      - "5432:5432"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
