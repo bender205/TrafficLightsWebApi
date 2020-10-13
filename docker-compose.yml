@@ -15,8 +15,19 @@ services:
       context: .     
       dockerfile: TrafficLights.Auth/Dockerfile
     links:
-      - "trafficlightpostgresdb"
+      - "authpostgresdb"
 
+
+  authpostgresdb:
+    image: postgres
+    restart: always
+    container_name: auth-database
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: auth
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - /var/lib/postgres
 
   trafficlightpostgresdb:
     image: postgres
@@ -28,5 +39,7 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - /var/lib/postgres
+
+
 
 

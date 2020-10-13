@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
+using TrafficLights.Auth.Model.Entities;
 
 namespace TrafficLights.Model.Entities
 {

@@ -10,17 +10,22 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
+using MediatR;
+using TrafficLights.Auth.Data;
+using TrafficLights.Auth.Data.DataAccess;
 using TrafficLights.Core;
 using TrafficLights.Core.Hubs;
 using TrafficLights.Data;
 using TrafficLights.Data.DataAccess;
 using TrafficLights.Model;
-using TrafficLights.Model.Auth;
 using TrafficLights.Model.Entities;
 using TrafficLights.Model.Helpers;
 using TrafficLights.WorkerService;
+using TrafficLights.Auth.Core.Services;
+using TrafficLights.Auth.Model.Auth;
 
 namespace TrafficLights.Api
 {
@@ -37,11 +42,16 @@ namespace TrafficLights.Api
         {
             services.AddSignalR();
             services.AddDbContext<TraficLightsContext>(options =>
-                    options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")),
+                    options.UseNpgsql(Configuration.GetConnectionString("TrafficLightConnection")),
                 ServiceLifetime.Transient);
+            
+         /*   services.AddDbContext<AuthContext>(options =>
+                    options.UseNpgsql(Configuration.GetConnectionString("AuthConnection")),
+                ServiceLifetime.Transient);*/
+
             services.AddScoped<TrafficLight>();
             services.AddScoped<TrafficLightRepository>();
-            services.AddScoped<AuthRepository>();
+            //services.AddScoped<AuthRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPasswordHasher<RegisterRequest>, PasswordHasher<RegisterRequest>>();
             services.AddScoped<IPasswordHasher<UserIdentityEntity>, PasswordHasher<UserIdentityEntity>>();
@@ -52,7 +62,7 @@ namespace TrafficLights.Api
 
 
 
-            //services.AddMediatR(Assembly.GetExecutingAssembly(), Assembly.Load(("TrafficLights.Core")));
+            services.AddMediatR(Assembly.GetExecutingAssembly(), Assembly.Load(("TrafficLights.Core")));
             services.AddSingleton<TrafficLightsService>();
 
             services.AddCors(options =>
@@ -158,9 +168,11 @@ namespace TrafficLights.Api
                 app.UseDeveloperExceptionPage();
 
                 using var services = app.ApplicationServices.CreateScope();
-                using var databaseContext = services.ServiceProvider.GetRequiredService<TraficLightsContext>();
+                using var databaseLightContext = services.ServiceProvider.GetRequiredService<TraficLightsContext>();
+                //using var databaseAuthContext = services.ServiceProvider.GetRequiredService<AuthContext>();
 
-                databaseContext.Database.EnsureCreated();
+                databaseLightContext.Database.EnsureCreated();
+                //databaseAuthContext.Database.EnsureCreated();
 
                 //if (!databaseContext.Database.EnsureCreated())
                 //{

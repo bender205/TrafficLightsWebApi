@@ -8,8 +8,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using TrafficLights.Auth.Core.Services;
+using TrafficLights.Auth.Model.Auth;
 using TrafficLights.Core;
-using TrafficLights.Model.Auth;
 using TrafficLights.Model.Entities;
 
 namespace TrafficLights.Auth.Controllers

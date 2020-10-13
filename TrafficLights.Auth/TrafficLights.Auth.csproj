@@ -13,6 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\TrafficLights.Auth.Core\TrafficLights.Auth.Core.csproj" />
+    <ProjectReference Include="..\..\TrafficLights.Auth.Data\TrafficLights.Auth.Data.csproj" />
     <ProjectReference Include="..\TrafficLight.Core\TrafficLights.Core.csproj" />
     <ProjectReference Include="..\TrafficLight.Data\TrafficLights.Data.csproj" />
     <ProjectReference Include="..\TrafficLight.Model\TrafficLights.Model.csproj" />

@@ -15,10 +15,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using TrafficLights.Auth.Core.Services;
+using TrafficLights.Auth.Data;
+using TrafficLights.Auth.Data.DataAccess;
+using TrafficLights.Auth.Model.Auth;
 using TrafficLights.Core;
 using TrafficLights.Data;
 using TrafficLights.Data.DataAccess;
-using TrafficLights.Model.Auth;
 using TrafficLights.Model.Entities;
 using TrafficLights.Model.Helpers;
 
@@ -35,8 +38,8 @@ namespace TrafficLights.Auth
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<TraficLightsContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")),
+            services.AddDbContext<AuthContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("AuthConnection")),
                 ServiceLifetime.Transient);
 
             services.AddScoped<AuthRepository>();
@@ -44,7 +47,7 @@ namespace TrafficLights.Auth
             services.AddScoped<IPasswordHasher<RegisterRequest>, PasswordHasher<RegisterRequest>>();
 
             var identityBuilder = services.AddIdentity<UserIdentityEntity, IdentityRole>();
-            identityBuilder.AddEntityFrameworkStores<TraficLightsContext>();
+            identityBuilder.AddEntityFrameworkStores<AuthContext>();
 
             services.AddCors(options =>
             {
@@ -98,22 +101,22 @@ namespace TrafficLights.Auth
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings.
-                options.Password.RequireDigit = true;
+                /*options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequireNonAlphanumeric = true;
-                options.Password.RequireUppercase = true;
-                options.Password.RequiredLength = 6;
-                options.Password.RequiredUniqueChars = 1;
+                options.Password.RequireUppercase = true;*/
+                options.Password.RequiredLength = 5;
+                //options.Password.RequiredUniqueChars = 1;
 
                 // Lockout settings.
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+           /*     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
                 options.Lockout.MaxFailedAccessAttempts = 5;
-                options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.AllowedForNewUsers = true;*/
 
                 // User settings.
-                options.User.AllowedUserNameCharacters =
+              /*  options.User.AllowedUserNameCharacters =
                     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-                options.User.RequireUniqueEmail = false;
+                options.User.RequireUniqueEmail = false;*/
             });
 
             services.AddAuthorization(options =>
@@ -138,6 +141,11 @@ namespace TrafficLights.Auth
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                using var services = app.ApplicationServices.CreateScope();
+                using var databaseAuthContext = services.ServiceProvider.GetRequiredService<AuthContext>();
+
+                databaseAuthContext.Database.EnsureCreated();
             }
             app.UseHttpsRedirection();
 
