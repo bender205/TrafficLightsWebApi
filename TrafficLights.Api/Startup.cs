@@ -40,7 +40,7 @@ namespace TrafficLights.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSignalR();
+           
             services.AddDbContext<TraficLightsContext>(options =>
                     options.UseNpgsql(Configuration.GetConnectionString("TrafficLightConnection")),
                 ServiceLifetime.Transient);
@@ -84,7 +84,7 @@ namespace TrafficLights.Api
             // services.AddHostedService<Worker>();
             services.AddSingleton<Worker>();
             services.AddHostedService<Worker>(provider => provider.GetService<Worker>());
-
+            //todo check usage of this code
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
 
@@ -209,10 +209,10 @@ namespace TrafficLights.Api
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=TrafficLights}/{action=Index}/{id?}");
-                app.UseEndpoints(endpoints =>
+               /* TODO removed this app.UseEndpoints(endpoints =>
                 {
                     endpoints.MapHub<TraficLightsHub>("/lighthub");
-                });
+                });*/
             });
         }
     }

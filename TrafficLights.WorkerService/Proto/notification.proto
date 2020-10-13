@@ -1,0 +1,21 @@
+﻿syntax = "proto3";
+
+
+import "google/protobuf/timestamp.proto";
+
+option csharp_namespace = "TrafficLights.WorkerService.Proto";
+
+service NotificationService{
+	rpc changeCololor (ChangeColorRequest) returns (EmptyReply);
+}
+
+message ChangeColorRequest {
+
+}
+
+message EmptyReply {
+	string method = 1;
+	int32 id = 2;
+	int32 color = 3;
+	google.protobuf.Timestamp Date = 4;
+}

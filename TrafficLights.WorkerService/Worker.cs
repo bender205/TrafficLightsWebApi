@@ -1,18 +1,21 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Grpc.Net.Client;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using TrafficLights.Core.Hubs;
 using TrafficLights.Data;
 using TrafficLights.Data.DataAccess;
 using TrafficLights.Model;
 using TrafficLights.Model.Entities;
 using TrafficLights.Model.Interfaces;
+using TrafficLights.WorkerService.Proto;
 
 namespace TrafficLights.WorkerService
 {
@@ -57,21 +60,33 @@ namespace TrafficLights.WorkerService
         #region Fields
         private readonly ILogger<Worker> _logger;
 
-        private readonly IHubContext<TraficLightsHub> _hubContext;
+      //  private readonly IHubContext<TraficLightsHub> _hubContext;
+     // private readonly GrpcChannel _channel;
+      private readonly string _address;
 
         private readonly IServiceProvider  _serviceProvider;
         private readonly TrafficLightsService _trafficLightsService;
         #endregion
         #region Constructors
-        public Worker(ILogger<Worker> logger, IHubContext<TraficLightsHub> hubContext, IServiceProvider serviceProvider, TrafficLightsService trafficLightsService)
+        public Worker(ILogger<Worker> logger, IConfiguration configuration , IServiceProvider serviceProvider, TrafficLightsService trafficLightsService)
         {
+            this._address = configuration.GetSection("gRCP:Address").Value;
             _logger = logger;
-            _hubContext = hubContext;
             _serviceProvider = serviceProvider;
             _trafficLightsService = trafficLightsService;
         }
         #endregion
         #region Methods
+
+        public void SendNotification(TrafficLightEntity trafficLight)
+        {
+            
+               using var channel = GrpcChannel.ForAddress(_address);
+               var client = new NotificationService.NotificationServiceClient(channel);
+
+            client.changeCololor("ReceiveColor")
+
+        }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
@@ -112,7 +127,23 @@ namespace TrafficLights.WorkerService
                 try
                 {//TODO fix sending params
                     TrafficLightEntity hubLight = new TrafficLightEntity() { Id = currentTrafficLight.Id, Color = currentTrafficLight.Color, Date = currentTrafficLight.Date };
-                    await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
+                  SendNotification(hubLight);
+                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
+                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
+                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
+                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
+                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
+                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
+                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
+                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
+                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
+                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
+                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
+                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
+                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
+                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
+                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
+                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
                 }
 
                 catch (Exception ex)

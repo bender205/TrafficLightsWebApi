@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -9,6 +10,13 @@ namespace TrafficLights.WorkerService
 {
     public class Program
     {
+
+
+        public static readonly IConfiguration Configuration = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", true, true)
+            .AddEnvironmentVariables()
+            .Build();
+
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();
@@ -18,7 +26,10 @@ namespace TrafficLights.WorkerService
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddHostedService<Worker>();
+                  services.AddSingleton(Configuration);
+                  services.AddHostedService<Worker>();
                 });
+
+        
     }
 }
