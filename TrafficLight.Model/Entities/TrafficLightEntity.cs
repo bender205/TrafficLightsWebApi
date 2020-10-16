@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Text.Json.Serialization;
 using TrafficLights.Model.Interfaces;
+using TrafficLights.Shared.Models;
 
 namespace TrafficLights.Model.Entities
 {
@@ -15,8 +16,7 @@ namespace TrafficLights.Model.Entities
 
         [Required]
         [Display(Name = "Color")]
-        [MaxLength(10)]/*
-        [JsonConverter(typeof(StringEnumConverter))]*/
+        [MaxLength(10)]
         public Colors Color { get; set; } = Colors.Red;
         [Display(Name = "Date")]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "0:yyyy\\MM\\dd HH:mm")]

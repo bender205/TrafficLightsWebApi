@@ -8,10 +8,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using TrafficLight.Identity.Shared.Models;
 using TrafficLights.Auth.Core.Services;
 using TrafficLights.Auth.Model.Auth;
-using TrafficLights.Core;
-using TrafficLights.Model.Entities;
 
 namespace TrafficLights.Auth.Controllers
 {
@@ -42,7 +41,7 @@ namespace TrafficLights.Auth.Controllers
         [AllowAnonymous]
         //[HttpPost("authenticate")]
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] AuthenticateRequest model, [FromServices] IUserStore<UserIdentityEntity> store)
+        public async Task<IActionResult> Login([FromBody] AuthenticateRequest model/*, [FromServices] IUserStore<UserIdentityEntity> store*/)
         {
             //var b = new UserStore<UserIdentityEntity>();
            // var a = store.FindByNameAsync(model.UserName.ToUpper(), CancellationToken.None);

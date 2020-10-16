@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\TrafficLights.Auth.Model\TrafficLights.Auth.Model.csproj" />
+    <ProjectReference Include="..\..\TrafficLights.Shared\TrafficLights.Shared.csproj" />
   </ItemGroup>
 
 </Project>

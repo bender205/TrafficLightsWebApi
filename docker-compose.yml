@@ -8,6 +8,7 @@ services:
       dockerfile: TrafficLights.Api/Dockerfile
     links:
       - "trafficlightpostgresdb"
+      - "notifications"
 
   trafficlights.auth:
     image: ${DOCKER_REGISTRY-}trafficlightsauth
@@ -17,6 +18,11 @@ services:
     links:
       - "authpostgresdb"
 
+  notifications:
+    image: ${DOCKER_REGISTRY-}notifications
+    build:     
+      context: .     
+      dockerfile: Notifications/Dockerfile    
 
   authpostgresdb:
     image: postgres
@@ -39,7 +45,3 @@ services:
       POSTGRES_PASSWORD: postgres
     volumes:
       - /var/lib/postgres
-
-
-
-

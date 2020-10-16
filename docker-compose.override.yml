@@ -12,6 +12,7 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - ./TrafficLights.Auth/Certificates:/secrets
+      - ./Notifications/Certificates/server.crt:/etc/ssl/certs/server.crt
 
   trafficlights.auth:
     environment:
@@ -23,6 +24,20 @@ services:
     volumes:
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
       - ./TrafficLights.Auth/Certificates:/secrets
+
+  notifications:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80      
+      - ${APPDATA}/ASP.NET/Https/Notifications.pfx:/etc/ssl/certs/Notifications.pfx
+      - ./Notifications/Certificates:/etc/ssl/certs/
+    ports:
+      - "3080:80"
+      - "3443:443"
+
+    volumes:
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ./Notifications/Certificates:/etc/ssl/certs/
 
   trafficlightpostgresdb:
     ports:

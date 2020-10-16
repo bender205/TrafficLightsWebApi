@@ -4,28 +4,17 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
-using MediatR;
-using TrafficLights.Auth.Data;
-using TrafficLights.Auth.Data.DataAccess;
-using TrafficLights.Core;
-using TrafficLights.Core.Hubs;
+using TrafficLight.Identity.Shared.Models;
 using TrafficLights.Data;
 using TrafficLights.Data.DataAccess;
-using TrafficLights.Model;
-using TrafficLights.Model.Entities;
-using TrafficLights.Model.Helpers;
+using TrafficLights.Shared.Helpers;
 using TrafficLights.WorkerService;
-using TrafficLights.Auth.Core.Services;
-using TrafficLights.Auth.Model.Auth;
 
 namespace TrafficLights.Api
 {
@@ -49,10 +38,10 @@ namespace TrafficLights.Api
                     options.UseNpgsql(Configuration.GetConnectionString("AuthConnection")),
                 ServiceLifetime.Transient);*/
 
-            services.AddScoped<TrafficLight>();
+            services.AddScoped<Model.TrafficLight>();
             services.AddScoped<TrafficLightRepository>();
             //services.AddScoped<AuthRepository>();
-            services.AddScoped<IUserService, UserService>();
+        //todo removed this ccccode    services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPasswordHasher<RegisterRequest>, PasswordHasher<RegisterRequest>>();
             services.AddScoped<IPasswordHasher<UserIdentityEntity>, PasswordHasher<UserIdentityEntity>>();
 
@@ -61,9 +50,10 @@ namespace TrafficLights.Api
 
 
 
-
-            services.AddMediatR(Assembly.GetExecutingAssembly(), Assembly.Load(("TrafficLights.Core")));
+         /*   ghjhgj
+            services.AddMediatR(Assembly.GetExecutingAssembly(), Assembly.Load(("TrafficLights.Core")));*/
             services.AddSingleton<TrafficLightsService>();
+
 
             services.AddCors(options =>
             {

@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TrafficLights.Shared.Models;
 
 namespace TrafficLights.Model.Interfaces
 {
-    public enum Colors
-    {
-        Red,
-        Yellow,
-        Green
-    }
+    
     public interface ITrafficLight
     {
         int Id { get; set; }

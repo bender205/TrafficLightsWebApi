@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using TrafficLights.Model.Interfaces;
+using TrafficLights.Shared.Models;
 
 namespace TrafficLights.Model
 {

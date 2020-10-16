@@ -16,9 +16,12 @@ message ChangeColorRequest {
 	google.protobuf.Timestamp Date = 4;
 }
 enum Color{
-Red = 0;
-Yellow = 1;
-Green = 2;
+	Red = 0;
+	Yellow = 1;
+	Green = 2;
 }
 message EmptyReply {
 }
+
+//[DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "0:yyyy\\MM\\dd HH:mm")]
+//public DateTime? Date { get; set; } = DateTime.UtcNow;

@@ -9,6 +9,7 @@ using TrafficLights.Data;
 using TrafficLights.Model;
 using TrafficLights.Model.Entities;
 using TrafficLights.Model.Interfaces;
+using TrafficLights.Shared.Models;
 using TrafficLights.WorkerService;
 
 namespace TrafficLights.Api.Controllers
@@ -48,7 +49,7 @@ namespace TrafficLights.Api.Controllers
 
                 //TODO replace code below with Interface realization 
                 await _repository.AddTrafficLightAsync(trafficLightById, CancellationToken.None);
-                var trafficLightForService = new TrafficLight()
+                var trafficLightForService = new Model.TrafficLight()
                 {
                     Id = trafficLightById.Id,
                     Color = trafficLightById.Color,
@@ -66,7 +67,7 @@ namespace TrafficLights.Api.Controllers
             }
             else
             {
-                var trafficLightForService = new TrafficLight() { Id = trafficLightById.Id, Color = trafficLightById.Color, Date = trafficLightById.Date, IsSwitchingDown = default };
+                var trafficLightForService = new Model.TrafficLight() { Id = trafficLightById.Id, Color = trafficLightById.Color, Date = trafficLightById.Date, IsSwitchingDown = default };
                 _trafficLightsService.AddTrafficLight(trafficLightForService);
                 return trafficLightById;
             }

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Worker">
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -11,7 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TrafficLight.Core\TrafficLights.Core.csproj" />
+    <ProjectReference Include="..\TrafficLight.Data\TrafficLights.Data.csproj" />
+    <ProjectReference Include="..\TrafficLight.Model\TrafficLights.Model.csproj" />
   </ItemGroup>
 
   <ItemGroup>

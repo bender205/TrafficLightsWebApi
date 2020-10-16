@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Net.Client;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +16,7 @@ using TrafficLights.Data.DataAccess;
 using TrafficLights.Model;
 using TrafficLights.Model.Entities;
 using TrafficLights.Model.Interfaces;
+using TrafficLights.Shared.Models;
 using TrafficLights.WorkerService.Proto;
 
 namespace TrafficLights.WorkerService
@@ -45,12 +47,10 @@ namespace TrafficLights.WorkerService
 
         }
 
-        public async Task<bool> ContainTrafficLightByIdAsync(int id)
+        public Task<bool> ContainTrafficLightByIdAsync(int id)
         {
-           return  await Task.Run(() =>
-            {
-                return this._activeTrafficLights.Any(t => t.Id == id);
-            });
+            var result = _activeTrafficLights.Any(t => t.Id == id);
+            return Task.FromResult(result);
         }
 
     }
@@ -60,20 +60,26 @@ namespace TrafficLights.WorkerService
         #region Fields
         private readonly ILogger<Worker> _logger;
 
+        private IConfiguration _configuration;
       //  private readonly IHubContext<TraficLightsHub> _hubContext;
-     // private readonly GrpcChannel _channel;
-      private readonly string _address;
+      // private readonly GrpcChannel _channel;
+        private readonly string _address;
 
         private readonly IServiceProvider  _serviceProvider;
         private readonly TrafficLightsService _trafficLightsService;
         #endregion
         #region Constructors
-        public Worker(ILogger<Worker> logger, IConfiguration configuration , IServiceProvider serviceProvider, TrafficLightsService trafficLightsService)
+        public Worker(ILogger<Worker> logger, IServiceProvider serviceProvider, TrafficLightsService trafficLightsService)
         {
-            this._address = configuration.GetSection("gRCP:Address").Value;
+           /* var gRpConfigurationSection = configuration.GetSection("gRPC");*/
+           //this._configuration = configuration;
+           //this._address = _configuration.GetValue<string>("Grpc:Address");
+           _address = "https://notifications/";
             _logger = logger;
             _serviceProvider = serviceProvider;
             _trafficLightsService = trafficLightsService;
+           
+            
         }
         #endregion
         #region Methods
@@ -83,8 +89,21 @@ namespace TrafficLights.WorkerService
             
                using var channel = GrpcChannel.ForAddress(_address);
                var client = new NotificationService.NotificationServiceClient(channel);
-
-            client.changeCololor("ReceiveColor")
+            //"ReceiveColor", trafficLight.Id, trafficLight.Color, trafficLight.Date
+            Color color;
+            if (trafficLight.Color == Colors.Red)
+            {
+                color = Color.Red;
+            }
+            else if (trafficLight.Color == Colors.Yellow)
+            {
+                color = Color.Yellow;
+            }
+            else
+            {
+                color = Color.Green;
+            }
+            client.ChangeColor(new ChangeColorRequest(){Id = trafficLight.Id, Color = color, Date = trafficLight.Date.Value.ToTimestamp(), Method = "receivecolor" });
 
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -128,22 +147,6 @@ namespace TrafficLights.WorkerService
                 {//TODO fix sending params
                     TrafficLightEntity hubLight = new TrafficLightEntity() { Id = currentTrafficLight.Id, Color = currentTrafficLight.Color, Date = currentTrafficLight.Date };
                   SendNotification(hubLight);
-                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
-                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
-                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
-                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
-                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
-                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
-                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
-                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
-                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
-                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
-                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
-                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
-                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
-                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
-                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
-                    //await _hubContext.Clients.All.SendAsync("ReceiveColor", hubLight);
                 }
 
                 catch (Exception ex)

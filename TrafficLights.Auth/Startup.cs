@@ -15,15 +15,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using TrafficLight.Identity.Shared.Models;
 using TrafficLights.Auth.Core.Services;
 using TrafficLights.Auth.Data;
 using TrafficLights.Auth.Data.DataAccess;
 using TrafficLights.Auth.Model.Auth;
-using TrafficLights.Core;
-using TrafficLights.Data;
-using TrafficLights.Data.DataAccess;
-using TrafficLights.Model.Entities;
-using TrafficLights.Model.Helpers;
+using TrafficLights.Shared.Helpers;
 
 namespace TrafficLights.Auth
 {

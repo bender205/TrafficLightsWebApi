@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficLights.Model", "Traf
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficLights.Data", "TrafficLight.Data\TrafficLights.Data.csproj", "{5D04A847-1BCE-48C7-B4AD-152EDF18D4BD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficLights.Core", "TrafficLight.Core\TrafficLights.Core.csproj", "{E73F3EC4-F813-422D-B8C8-C2BE1399D0F1}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficLights.WorkerService", "TrafficLights.WorkerService\TrafficLights.WorkerService.csproj", "{1A05FC7A-3121-4A56-9054-898C240834B4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficLights.Api", "TrafficLights.Api\TrafficLights.Api.csproj", "{AF1C0B8A-BF3D-4699-9B7E-82245C33B3C0}"
@@ -17,15 +15,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficLights.Auth", "Traff
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{8E6CB405-B4DC-42C5-989A-8C1C24ACB905}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficLights.Auth.Data", "..\TrafficLights.Auth.Data\TrafficLights.Auth.Data.csproj", "{D29A4177-7C54-4F0C-AEDF-10CFEEACAE78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficLights.Auth.Data", "..\TrafficLights.Auth.Data\TrafficLights.Auth.Data.csproj", "{D29A4177-7C54-4F0C-AEDF-10CFEEACAE78}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficLights.Auth.Core", "..\TrafficLights.Auth.Core\TrafficLights.Auth.Core.csproj", "{59D881D7-B699-40A7-957E-41EB824779AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficLights.Auth.Core", "..\TrafficLights.Auth.Core\TrafficLights.Auth.Core.csproj", "{59D881D7-B699-40A7-957E-41EB824779AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficLights.Auth.Model", "..\TrafficLights.Auth.Model\TrafficLights.Auth.Model.csproj", "{4AF7CD98-BD3B-4BBF-9186-945A0DA58333}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrafficLights.Auth.Model", "..\TrafficLights.Auth.Model\TrafficLights.Auth.Model.csproj", "{4AF7CD98-BD3B-4BBF-9186-945A0DA58333}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notifications", "..\Notifications\Notifications.csproj", "{38F38468-641E-46CE-B99D-B1677257D5B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Notifications", "Notifications\Notifications.csproj", "{38F38468-641E-46CE-B99D-B1677257D5B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notifications.Core", "..\Notifications.Core\Notifications.Core.csproj", "{10787C53-2F4E-4122-AC25-787EDD0FFDE1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Notifications.Core", "Notifications.Core\Notifications.Core.csproj", "{10787C53-2F4E-4122-AC25-787EDD0FFDE1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficLights.Shared", "..\TrafficLights.Shared\TrafficLights.Shared.csproj", "{A754540C-DB49-4991-BEFE-7E5023478988}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrafficLight.Identity.Shared", "..\TrafficLight.Identity.Shared\TrafficLight.Identity.Shared.csproj", "{46213546-9C07-4A29-880F-388186B25448}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +43,6 @@ Global
 		{5D04A847-1BCE-48C7-B4AD-152EDF18D4BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D04A847-1BCE-48C7-B4AD-152EDF18D4BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D04A847-1BCE-48C7-B4AD-152EDF18D4BD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E73F3EC4-F813-422D-B8C8-C2BE1399D0F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E73F3EC4-F813-422D-B8C8-C2BE1399D0F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E73F3EC4-F813-422D-B8C8-C2BE1399D0F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E73F3EC4-F813-422D-B8C8-C2BE1399D0F1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1A05FC7A-3121-4A56-9054-898C240834B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1A05FC7A-3121-4A56-9054-898C240834B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A05FC7A-3121-4A56-9054-898C240834B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -81,6 +79,14 @@ Global
 		{10787C53-2F4E-4122-AC25-787EDD0FFDE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10787C53-2F4E-4122-AC25-787EDD0FFDE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10787C53-2F4E-4122-AC25-787EDD0FFDE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A754540C-DB49-4991-BEFE-7E5023478988}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A754540C-DB49-4991-BEFE-7E5023478988}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A754540C-DB49-4991-BEFE-7E5023478988}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A754540C-DB49-4991-BEFE-7E5023478988}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46213546-9C07-4A29-880F-388186B25448}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46213546-9C07-4A29-880F-388186B25448}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46213546-9C07-4A29-880F-388186B25448}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46213546-9C07-4A29-880F-388186B25448}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
